@@ -25,11 +25,25 @@ from tratto.connectivity import *
 
 routerlist = open('./config/routers.txt','r')
 routerlist_line = routerlist.readlines()
-
-# routerconfig = open('./config/password.txt')
-# routerconfig_line = routerconfig.readlines()
-
 today_date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+
+class Notice(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.pack()
+        self.createWidgets()
+
+    def createWidgets(self):
+        log =  'Please wait till running finished'
+        self.helloLabel = Label(self, text=log)
+        self.helloLabel.pack()
+        self.quitButton = Button(self, text='Go', command=self.quit)
+        self.quitButton.pack()
+
+Notice = Notice()
+Notice.master.title('Cisco Counting is running')
+Notice.mainloop()
+
 
 def mkdir(path):
     # 去除首位空格
