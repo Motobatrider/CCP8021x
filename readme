@@ -12,3 +12,16 @@
 ## And the count result for these prots which turned-off 802.1x will be listed in Report folder.
 ## And all the error message will be logged in Error folder.
 ## Enjoy it ^_^
+
+
+# Folder map
+#  |_ count2.py
+#  |_ config
+#  |     |_ config
+#  |     |_ password.txt
+#  |     |_ routers.txt
+#  |     |_ routers0.txt
+#  |_ Error
+#  |_ Export
+#  |_ Report
+#  |_ tratto
