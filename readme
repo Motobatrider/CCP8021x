@@ -4,8 +4,11 @@
 
 # Inteructions:
 ## Main code in count2.py
-## You can change password model in ./config/config
-## It will export "Show Running Config" information to the reports in Export folder
-## And the count result for these prots which turned-off 802.1x will be listed in Report folder
-## And all the error message will be logged in Error folder
+## You can change password model in ./config/config.
+## If choose model 1, you need to put router ip in ./config/router.txt and password in ./config/password.txt.
+## If choose model 0, you need to put router and password in ./config/router0.txt.
+## You can find examples in these folders.
+## It will export "Show Running Config" information to the reports in Export folder.
+## And the count result for these prots which turned-off 802.1x will be listed in Report folder.
+## And all the error message will be logged in Error folder.
 ## Enjoy it ^_^
