@@ -23,8 +23,6 @@ from tratto import *
 from tratto.systems import *
 from tratto.connectivity import *
 
-routerlist = open('./config/routers.txt','r')
-routerlist_line = routerlist.readlines()
 today_date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 class Notice(Frame):
@@ -110,28 +108,85 @@ def craw_cisco(x):
             connect_error.close()
             print "%s connect error"%x
 
+def craw0_cisco(x,y,z,t):
     # Create Export Files
-#    m = SystemProfiles['IOS']
-#    #change 23 for 22 and telnet for ssh for ssh enabled devices
-#    s = Session(x,22,"ssh",m)
-#    s.login("cisco", "Valmet123!@#..")
-#    s.escalateprivileges('abc123!')
-#    show_running_config = s.sendcommand("show run")
-#    s.logout()
-#    e = open('./Export/%s.txt'%x,'w')
-#    e.write(show_running_config)
-#    e.close()
+    routerconfig = open('./config/password.txt')
+    routerconfig_line = routerconfig.readlines()
+    router_name = routerconfig_line[0].replace('\n','')
+    router_password = routerconfig_line[1].replace('\n','')
+    router_enable_password = routerconfig_line[2].replace('\n','')
+    today_date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
-# Ping check
-for r in routerlist_line:
-    r = r.replace('\n','')
-    return1=os.system('ping -n -c 2 -i 1 %s'%r) # ping twice waiting for 2 seconds
-    if return1:
-        connect_error = open('./Error/error%s.txt'%today_date,'a')
-        connect_error.write('%s, connect error, '%r+time.strftime('%Y-%m-%d_%H:%M:%S',time.localtime(time.time()))+'\n')
-#        print "can't open"
-    else:
-        craw_cisco(r)
+    m = SystemProfiles['IOS']
+    #change 23 for 22 and telnet for ssh for ssh enabled devices
+    s = Session(x,22,"ssh",m)
+#    s.login("cisco", "Valmet123!@#..")
+    try:
+        s.login(y,z)
+        # if your need to issue an "enable" command
+        s.escalateprivileges(t)
+        show_running_config = s.sendcommand("show run")
+        s.logout()
+        path = "./Export/%s"%today_date
+        mkdir(path)
+        e = open('./Export/%s/%s.txt'%(today_date,x),'w')
+        e.write(show_running_config)
+        e.close()
+
+    except:
+        try:
+            s = Session(x,23,"telnet",m)
+            s.login(y,z)
+            s.escalateprivileges(t)
+            show_running_config = s.sendcommand("show run")
+            s.logout()
+            path = "./Export/%s"%today_date
+            mkdir(path)
+            e = open('./Export/%s/%s.txt'%(today_date,x),'w')
+            e.write(show_running_config)
+            e.close()
+        except:
+            connect_error = open('./error.txt','a')
+            connect_error.write('%s, login error, '%x+time.strftime('%Y-%m-%d_%H:%M:%S',time.localtime(time.time()))+'\n')
+            connect_error.close()
+            print "%s connect error"%x
+
+# Check password model
+router_config = open('./config/config')
+router_config_line =  router_config.readlines()
+
+for i in router_config_line:
+    if 'password_model:' in i:
+        password_model = i[-2:-1]
+
+if password_model=='0':
+    routerlist = open('./config/routers0.txt')
+    routerlist_line = routerlist.readlines()
+    for r in routerlist_line:
+        r = r.replace('\n','')
+        r = r.split(',')
+        router_ip = r[0].replace('\n','').replace(' ','')
+        router_account = r[1].replace('\n','').replace(' ','')
+        router_pw = r[2].replace('\n','').replace(' ','')
+        router_en = r[3].replace('\n','').replace(' ','')
+        return1 = os.system('ping -n -c 2 -i 1 %s'%router_ip)
+        if return1:
+            connect_error = open('./Error/error%s.txt'%today_date,'a')
+            connect_error.write('%s, connect error, '%r+time.strftime('%Y-%m-%d_%H:%M:%S',time.localtime(time.time()))+'\n')
+        else:
+            craw0_cisco(router_ip,router_account,router_pw,router_en)
+else:
+    routerlist = open('./config/routers.txt','r')
+    routerlist_line = routerlist.readlines()
+    for r in routerlist_line:
+        r = r.replace('\n','')
+        return1=os.system('ping -n -c 2 -i 1 %s'%r) # ping twice waiting for 2 seconds
+        if return1:
+            connect_error = open('./Error/error%s.txt'%today_date,'a')
+            connect_error.write('%s, connect error, '%r+time.strftime('%Y-%m-%d_%H:%M:%S',time.localtime(time.time()))+'\n')
+        #        print "can't open"
+        else:
+            craw_cisco(r)
 
 def count():
     # Count 8021x
@@ -197,7 +252,7 @@ class Application(Frame):
     def createWidgets(self):
         today_date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
         flist = os.listdir('./Export/%s/'%today_date)
-        log =  '      Read ' + str(len(flist)) + ' Cisco log files       '+ '\n'+ '\n' + '      ' + str(countp) + ' ports turned-off 802.1x      ' + '\n' + '\n'+ '      Report in list.txt      '
+        log =  '      Read ' + str(len(flist)) + ' Cisco log files       '+ '\n'+ '\n' + '      ' + str(countp) + ' ports turned-off 802.1x      ' + '\n' + '\n'+ '      Report in Report folder      '
         self.helloLabel = Label(self, text=log)
         self.helloLabel.pack()
         self.quitButton = Button(self, text='Quit', command=self.quit)
