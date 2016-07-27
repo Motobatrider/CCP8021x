@@ -1,0 +1,11 @@
+# This is config file for CCP8021x
+# Please check instruction for each fields
+
+## Password model
+## you can have two password model
+## If you are using one password for all switchers, please use password model 1, and save password in .\config\password.txt and router in .\config\routers.txt
+## If each switcher has it's own password, please use password model 2 and save router ip and password in routers0.txt
+
+password model: 1
+
+## Others, to be contiue
