@@ -2,18 +2,9 @@
 # -*- coding: utf-8 -*-
 # Cisco log check -- 802.1x enable or not v1.1
 # Created by Randy Chen
-# Jun 24 2016
+# July 24 2016
+# Last update Jul 27 2016
 
-# v1.0 update
-# Log file should under ./Export/
-# py file should under ./
-# Report in ./list.txt
-# July 04 2016: add output window
-
-# v1.1 update
-# Create catch router running config model
-# no router list read
-# no password encrypt
 
 import sys
 import os
@@ -67,17 +58,16 @@ def mkdir(path):
 
 def craw_cisco(x):
     # Create Export Files
+    # For password model 0
     routerconfig = open('./config/password.txt')
     routerconfig_line = routerconfig.readlines()
     router_name = routerconfig_line[0].replace('\n','')
     router_password = routerconfig_line[1].replace('\n','')
     router_enable_password = routerconfig_line[2].replace('\n','')
     today_date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-
     m = SystemProfiles['IOS']
     #change 23 for 22 and telnet for ssh for ssh enabled devices
     s = Session(x,22,"ssh",m)
-#    s.login("cisco", "Valmet123!@#..")
     try:
         s.login(router_name, router_password)
         # if your need to issue an "enable" command
@@ -120,10 +110,9 @@ def craw0_cisco(x,y,z,t):
     m = SystemProfiles['IOS']
     #change 23 for 22 and telnet for ssh for ssh enabled devices
     s = Session(x,22,"ssh",m)
-#    s.login("cisco", "Valmet123!@#..")
+# For password model 1
     try:
         s.login(y,z)
-        # if your need to issue an "enable" command
         s.escalateprivileges(t)
         show_running_config = s.sendcommand("show run")
         s.logout()
@@ -184,7 +173,6 @@ else:
         if return1:
             connect_error = open('./Error/error%s.txt'%today_date,'a')
             connect_error.write('%s, connect error, '%r+time.strftime('%Y-%m-%d_%H:%M:%S',time.localtime(time.time()))+'\n')
-        #        print "can't open"
         else:
             craw_cisco(r)
 
