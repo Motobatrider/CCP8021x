@@ -5,7 +5,6 @@
 # July 24 2016
 # Last update Jul 27 2016
 
-
 import sys
 import os
 import time
@@ -17,22 +16,25 @@ from tratto.connectivity import *
 today_date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 class Notice(Frame):
-    def __init__(self, master=None):
+    def __init__(self, master=None,log_text="",quit_button=""):
         Frame.__init__(self, master)
+        self.log_text = log_text
+        self.quit_button = quit_button
         self.pack()
         self.createWidgets()
 
     def createWidgets(self):
-        log =  'Please wait till running finished'
-        self.helloLabel = Label(self, text=log)
+        self.helloLabel = Label(self, text=self.log_text)
         self.helloLabel.pack()
-        self.quitButton = Button(self, text='Go', command=self.quit)
+        self.quitButton = Button(self, text=self.quit_button, command=self.quit)
         self.quitButton.pack()
 
-Notice = Notice()
-Notice.master.title('Cisco Counting is running')
-Notice.mainloop()
+def Tkshow(show,button_text,tk_title):
+    tkshow = Notice(None,show,button_text)
+    tkshow.master.title(tk_title)
+    tkshow.mainloop()
 
+Tkshow("Please wait till running finished","GO",'Cisco Counting is running')
 
 def mkdir(path):
     # 去除首位空格
@@ -230,22 +232,7 @@ def count():
     return countp
 
 countp = count()
+flist = os.listdir('./Export/%s/'%today_date)
+c_logs =  '      Read ' + str(len(flist)) + ' Cisco log files       '+ '\n'+ '\n' + '      ' + str(countp) + ' ports turned-off 802.1x      ' + '\n' + '\n'+ '      Report in Report folder      '
 
-class Application(Frame):
-    def __init__(self, master=None):
-        Frame.__init__(self, master)
-        self.pack()
-        self.createWidgets()
-
-    def createWidgets(self):
-        today_date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-        flist = os.listdir('./Export/%s/'%today_date)
-        log =  '      Read ' + str(len(flist)) + ' Cisco log files       '+ '\n'+ '\n' + '      ' + str(countp) + ' ports turned-off 802.1x      ' + '\n' + '\n'+ '      Report in Report folder      '
-        self.helloLabel = Label(self, text=log)
-        self.helloLabel.pack()
-        self.quitButton = Button(self, text='Quit', command=self.quit)
-        self.quitButton.pack()
-
-app = Application()
-app.master.title('C-Log')
-app.mainloop()
+Tkshow(c_logs,"Quit",'Cisco Counting is finished')
