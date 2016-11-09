@@ -3,7 +3,7 @@
 
 ## Password model
 ## you can have two password model
-## If you are using one password for all switchers, please use password model 1, and save password in .\config\password.txt and router in .\config\routers.txt
+## If you are using one password for all switchers, please use password model 1, and save password in .\config\password.txt and router ip in .\config\routers.txt
 ## If each switcher has it's own password, please use password model 0 and save router ip and password in routers0.txt
 
 password_model: 1
