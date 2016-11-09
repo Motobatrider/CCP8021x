@@ -112,7 +112,7 @@ def craw0_cisco(x,y,z,t):
     m = SystemProfiles['IOS']
     #change 23 for 22 and telnet for ssh for ssh enabled devices
     s = Session(x,22,"ssh",m)
-# For password model 1
+    # For password model 1
     try:
         s.login(y,z)
         s.escalateprivileges(t)
