@@ -2,7 +2,7 @@
 # Use Python 2.7 and Ubuntu
 # Created by Randy Chen (randy.chenxinhao@foxmail.com)
 
-# Inteructions:
+# You need to know:
 ## Main code in count2.py
 ## You can change password model in ./config/config.
 ## If choose model 1, you need to put router ip in ./config/router.txt and password in ./config/password.txt.
